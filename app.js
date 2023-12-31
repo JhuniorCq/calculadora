@@ -5,15 +5,36 @@ const botonIgual = document.getElementById('igual');
 const botonC = document.getElementById('botonC');
 const resultadoParrafo = document.getElementById('resultado');
 
+const operadoresArray = ['/', '*', '+', '-']; // Este Array será usado para verificar si el botón presionado es un Operador
+
+let igualPresionado = false; //Esto me servirá para verificar si se ha presionado el botón IGUAL
+
 const mostrarDigitosPantalla = (evento) => {
 
     const botonClickeado = evento.target;
     const contenidoBoton = botonClickeado.innerText;
 
+    //Este if anidado me asegura que si Luego de haber presionado el IGUAL presiono cualquier otro botón que sea diferente de los OPERADORES,
+    //entonces el valor que estaba en Pantalla se cambiará al Valor del Botón presionado (.,0,1,2,3,4,5,6,7,8,9)
+    if(igualPresionado) {
+
+        igualPresionado = false;
+
+        //Este includes VERIFICARÁ si el Botón Presionado es alguno de los Operadores, si es así devolverá true y sino false
+        const botonCoincideOperador = operadoresArray.includes(contenidoBoton);
+
+        if(!botonCoincideOperador) {
+            //En caso el Botón Presionado NO sea ningún Operador -> debió haber sido un número entre el 0 y 9, por lo que se Limpiará la pantalla
+            resultadoParrafo.innerText = '';
+        }
+    }    
+
     if(resultadoParrafo.innerText === '0') {
 
-        if(contenidoBoton === '.') { //Esto lo hago para que aparezca el 0 antes del "."
-            console.log('presione el punto')
+        const signosArray = operadoresArray.concat('.'); // Este Array será usado para verificar si el botón presionado es uno de los Signos
+        const botonCoincideSigno = signosArray.includes(contenidoBoton);
+
+        if(botonCoincideSigno) { //Esto lo hago para que el 0 pueda aparecer antes del [. , / , * , + , -]
             resultadoParrafo.innerText = '0'+contenidoBoton;
         } else {
             resultadoParrafo.innerText = contenidoBoton;
@@ -49,10 +70,12 @@ const borrarTodo = () => {
 
 const obtenerResultado = (evento) => {
     try {
+        igualPresionado = true;
+        
         const digitosParrafo = resultadoParrafo.innerText;
         const resultado = eval(digitosParrafo);
 
-        if(resultado === Infinity) { //Esto es para que cuando se quiera dividir entre 0 lo mande al CATCH
+        if(resultado === Infinity || resultado === NaN) { //Esto es para que cuando se quiera dividir entre 0 lo mande al CATCH
             throw new Error();
         }
 
