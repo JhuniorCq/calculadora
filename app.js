@@ -23,9 +23,6 @@ const mostrarDigitosPantalla = (evento) => {
         //Con esto cada que doy Click se cambia el Contenido del Parrafo <p> "resultado"
         resultadoParrafo.innerText = resultadoParrafo.innerText + contenidoBoton;
     }
-
-    console.log(evento.target)
-    console.log(typeof contenidoBoton, contenidoBoton)
 }
 
 const borrarDigito = () => {
